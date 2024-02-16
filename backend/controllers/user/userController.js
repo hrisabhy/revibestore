@@ -1,6 +1,6 @@
 const { validationResult } = require("express-validator");
 const UserModel = require("../../models/User");
-const { hashPassword } = require("../../services/authService");
+const { hashPassword, createToken } = require("../../services/authService");
 
 module.exports.register = async (req, res) => {
   const errors = validationResult(req);
@@ -16,9 +16,10 @@ module.exports.register = async (req, res) => {
           password: hashed,
           admin: true,
         });
+        const token = createToken({ id: user._id, name: user.name });
         return res
           .status(200)
-          .json({ message: "Your account has been registered" });
+          .json({ message: "Your account has been registered", token });
       } else {
         return res.status(401).json({ message: "Email already used" });
       }

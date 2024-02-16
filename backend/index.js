@@ -14,7 +14,7 @@ connect();
 app.use(express.json());
 
 // user routes
-app.use(userRoutes);
+app.use("/api", userRoutes);
 
 app.get("/", (req, res) => {
   res.json({ msg: "Welcome to revibe" });
