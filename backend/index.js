@@ -3,10 +3,18 @@ const express = require("express");
 const env = require("./config/envConfig");
 const connect = require("./config/db");
 
+const userRoutes = require("./routes/user/userRoutes");
+
 const app = express();
 
 // Database connection
 connect();
+
+// Middleware
+app.use(express.json());
+
+// user routes
+app.use(userRoutes);
 
 app.get("/", (req, res) => {
   res.json({ msg: "Welcome to revibe" });
