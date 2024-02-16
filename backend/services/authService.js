@@ -13,3 +13,7 @@ module.exports.createToken = (user) => {
     expiresIn: "7d",
   });
 };
+
+module.exports.comparePassword = async (password, dbPassword) => {
+  return await bcrypt.compare(password, dbPassword);
+};
