@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 
 const env = require("./config/envConfig");
 const connect = require("./config/db");
@@ -11,6 +12,7 @@ const app = express();
 connect();
 
 // Middleware
+app.use(cors());
 app.use(express.json());
 
 // user routes
