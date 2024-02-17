@@ -1,9 +1,7 @@
+import AdminLogin from "./screens/auth/AdminLogin";
+
 function App() {
-  return (
-    <>
-      <div className="bg-black1 h-screen">login</div>
-    </>
-  );
+  return <AdminLogin />;
 }
 
 export default App;
