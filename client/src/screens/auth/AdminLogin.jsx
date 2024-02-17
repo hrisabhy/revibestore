@@ -1,11 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuthLoginMutation } from "../../store/services/authService";
+import { useDispatch } from "react-redux";
+import { setAdminToken } from "../../store/reducers/authReducer";
 
 const AdminLogin = () => {
   const [state, setState] = useState({
     email: "",
     password: "",
   });
+  const navigate = useNavigate();
   const handleInputs = (e) => {
     setState({ ...state, [e.target.name]: e.target.value });
   };
@@ -18,6 +22,14 @@ const AdminLogin = () => {
     e.preventDefault();
     login(state);
   };
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (response.isSuccess) {
+      localStorage.setItem("admin-token", response?.data?.token);
+      dispatch(setAdminToken(response?.data?.token));
+      navigate("/dashboard/products");
+    }
+  }, [response.isSuccess]);
   return (
     <div className="bg-black1 h-screen flex justify-center items-center">
       <form
