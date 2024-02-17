@@ -1,7 +1,7 @@
-import AdminLogin from "./screens/auth/AdminLogin";
+import Routing from "./routes/Routing";
 
 function App() {
-  return <AdminLogin />;
+  return <Routing />;
 }
 
 export default App;
