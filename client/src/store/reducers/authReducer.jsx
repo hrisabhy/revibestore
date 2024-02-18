@@ -31,14 +31,9 @@ const authReducer = createSlice({
       state.userToken = action.payload;
       state.user = jwtDecode(action.payload);
     },
-    logout: (state, { payload }) => {
-      localStorage.removeItem(payload);
-      if (payload === "admin-token") {
-        state.adminToken = null;
-      } else if (payload === "userToken") {
-        state.userToken = null;
-        state.user = null;
-      }
+    logout: (state) => {
+      localStorage.removeItem("admin-token");
+      state.adminToken = null;
     },
   },
 });
