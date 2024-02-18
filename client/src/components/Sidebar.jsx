@@ -1,10 +1,13 @@
 import { Link } from "react-router-dom";
-const Sidebar = () => {
+const Sidebar = ({ side, closeSidebar }) => {
   return (
     <div
-      className={`fixed top-0 sm:left-0 w-64 h-screen bg-gray-800 z-10 transition-all`}
+      className={`fixed top-0 ${side} sm:left-0 w-64 h-screen bg-gray-800 z-10 transition-all`}
     >
-      <i className="bi bi-x-lg absolute top-4 right-4 sm:hidden block cursor-pointer text-lg"></i>
+      <i
+        className="bi bi-x-lg absolute top-4 right-4 sm:hidden block cursor-pointer text-lg"
+        onClick={closeSidebar}
+      ></i>
       <div className="bg-white p-4 text-xl">
         <h3>Revibe Store</h3>
       </div>
