@@ -1,5 +1,7 @@
+import Sidebar from "../../components/Sidebar";
+
 const Products = () => {
-  return <h1>Product List</h1>;
+  return <Sidebar />;
 };
 
 export default Products;
