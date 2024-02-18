@@ -2,6 +2,8 @@ import { Link, useNavigate } from "react-router-dom";
 import ScreenHeader from "../../components/ScreenHeader";
 import Wrapper from "./Wrapper";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { setSuccess } from "../../store/reducers/globalReducer";
 import { useCreateMutation } from "../../store/services/categoryService";
 const CreateCategory = () => {
   const [state, setState] = useState("");
@@ -13,8 +15,10 @@ const CreateCategory = () => {
     saveCategory({ name: state });
   };
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   useEffect(() => {
     if (data?.isSuccess) {
+      dispatch(setSuccess(data?.data?.message));
       navigate("/dashboard/categories");
     }
   }, [data?.isSuccess]);

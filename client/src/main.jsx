@@ -6,9 +6,7 @@ import Store from "./store/index.jsx";
 import "./input.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <Provider store={Store}>
-      <App />
-    </Provider>
-  </React.StrictMode>
+  <Provider store={Store}>
+    <App />
+  </Provider>
 );
