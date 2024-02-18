@@ -8,4 +8,5 @@ router.post(
   [categoryValidations, Authorization.authorized],
   Category.create
 );
+router.get("/categories/:page", Category.categories);
 module.exports = router;
