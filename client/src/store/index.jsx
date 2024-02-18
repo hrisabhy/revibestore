@@ -4,7 +4,7 @@ import authReducer from "./reducers/authReducer";
 const Store = configureStore({
   reducer: {
     [authService.reducerPath]: authService.reducer,
-    authreducer: authReducer,
+    authReducer: authReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(authService.middleware),

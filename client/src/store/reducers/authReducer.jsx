@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { jwtDecode } from "jwt-decode";
 const customerToken = localStorage.getItem("userToken");
-
 function verifyToken(keyName) {
   const storage = localStorage.getItem(keyName);
   if (storage) {
