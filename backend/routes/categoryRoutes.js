@@ -19,4 +19,9 @@ router.put(
   [categoryValidations, Authorization.authorized],
   Category.updateCategory
 );
+router.delete(
+  "/delete-category/:id",
+  Authorization.authorized,
+  Category.deleteCategory
+);
 module.exports = router;

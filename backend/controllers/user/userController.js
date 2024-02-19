@@ -25,7 +25,7 @@ module.exports.register = async (req, res) => {
           .status(200)
           .json({ message: "Your account has been registered", token });
       } else {
-        return res.status(401).json({ message: "Email already used" });
+        return res.status(400).json({ message: "Email already used" });
       }
     } catch (err) {
       console.log(err.message);
@@ -52,12 +52,12 @@ module.exports.login = async (req, res) => {
           }
         } else {
           return res
-            .status(401)
+            .status(400)
             .json({ errors: [{ msg: "password not matched!" }] });
         }
       } else {
         return res
-          .status(401)
+          .status(400)
           .json({ errors: [{ msg: `${email} is not found` }] });
       }
     } catch (error) {
@@ -65,6 +65,6 @@ module.exports.login = async (req, res) => {
       return res.status(500).json("Internal Server Error");
     }
   } else {
-    return res.status(401).json({ errors: errors.array() });
+    return res.status(400).json({ errors: errors.array() });
   }
 };
