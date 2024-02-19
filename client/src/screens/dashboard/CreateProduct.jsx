@@ -3,6 +3,8 @@ import { TwitterPicker } from "react-color";
 import { v4 as uuidv4 } from "uuid";
 import ScreenHeader from "../../components/ScreenHeader";
 import Colors from "../../components/Colors";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 import Wrapper from "./Wrapper";
 import { useAllCategoriesQuery } from "../../store/services/categoryService";
 import Spinner from "../../components/Spinner";
@@ -11,6 +13,7 @@ import SizesList from "../../components/SizesList";
 import ImagesPreview from "../../components/ImagesPreview";
 const CreateProduct = () => {
   const { data = [], isFetching } = useAllCategoriesQuery();
+  const [value, setValue] = useState("");
   const [state, setState] = useState({
     title: "",
     price: 0,
@@ -132,6 +135,25 @@ const CreateProduct = () => {
                 placeholder="stock..."
                 onChange={handleInput}
                 value={state.stock}
+              />
+            </div>
+            <div className="w-full p-3">
+              <label htmlFor="description" className="label">
+                Description
+              </label>
+              <ReactQuill
+                theme="snow"
+                id="description"
+                value={value}
+                onChange={setValue}
+                placeholder="Description..."
+              />
+            </div>
+            <div className="w-full p-3">
+              <input
+                type="submit"
+                value="save product"
+                className="btn btn-indigo"
               />
             </div>
             <div className="w-full md:w-6/12 p-3">
