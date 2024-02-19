@@ -1,4 +1,10 @@
 @layer components {
+  .btn {
+    @apply py-2 px-5 text-white rounded uppercase;
+  }
+  .btn-warning {
+    @apply bg-orange-400 py-[6px];
+  }
   .btn-dark {
     @apply bg-gray-900 px-4 py-3 capitalize font-medium;
   }
