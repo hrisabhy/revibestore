@@ -32,4 +32,10 @@
   .form-control {
     @apply bg-gray-900 p-3 rounded-sm outline-none w-full focus:ring-[3px] ring-gray-700 transition-all duration-500 placeholder:text-gray-500 placeholder:capitalize;
   }
+  .size {
+    @apply border border-gray-400 ml-2 px-3 py-1.5 mt-2 uppercase cursor-pointer rounded text-gray-400 text-sm;
+  }
+  .right-heading {
+    @apply capitalize my-2 text-gray-400 text-base;
+  }
 }

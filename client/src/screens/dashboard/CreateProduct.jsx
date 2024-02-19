@@ -7,6 +7,7 @@ import Wrapper from "./Wrapper";
 import { useAllCategoriesQuery } from "../../store/services/categoryService";
 import Spinner from "../../components/Spinner";
 import { useState } from "react";
+import SizesList from "../../components/SizesList";
 const CreateProduct = () => {
   const { data = [], isFetching } = useAllCategoriesQuery();
   const [state, setState] = useState({
@@ -17,6 +18,14 @@ const CreateProduct = () => {
     category: "",
     colors: [],
   });
+  const [sizes] = useState([
+    { name: "xsm" },
+    { name: "sm" },
+    { name: "md" },
+    { name: "lg" },
+    { name: "xl" },
+  ]);
+  const [sizeList, setSizeList] = useState([]);
   const handleInput = (e) => {
     setState({ ...state, [e.target.name]: e.target.value });
   };
@@ -30,6 +39,14 @@ const CreateProduct = () => {
   const deleteColor = (color) => {
     const filtered = state.colors.filter((clr) => clr.color !== color.color);
     setState({ ...state, colors: filtered });
+  };
+  const chooseSize = (sizeObject) => {
+    const filtered = sizeList.filter((size) => size.name !== sizeObject.name);
+    setSizeList([...filtered, sizeObject]);
+  };
+  const deleteSize = (name) => {
+    const filtered = sizeList.filter((size) => size.name !== name);
+    setSizeList(filtered);
   };
   console.log(data, isFetching);
   return (
@@ -129,10 +146,29 @@ const CreateProduct = () => {
               </label>
               <TwitterPicker onChangeComplete={saveColors} />
             </div>
+            <div className="w-full md:w-6/12 p-3">
+              <label htmlFor="sizes" className="label">
+                choose sizes
+              </label>
+              {sizes.length > 0 && (
+                <div className="flex flex-wrap -mx-3">
+                  {sizes.map((size) => (
+                    <div
+                      key={size.name}
+                      className="size"
+                      onClick={() => chooseSize(size)}
+                    >
+                      {size.name}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
         <div className="w-full xl:w-4/12 p-3">
           <Colors colors={state.colors} deleteColor={deleteColor} />
+          <SizesList list={sizeList} deleteSize={deleteSize} />
         </div>
       </div>
     </Wrapper>
