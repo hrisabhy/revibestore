@@ -6,6 +6,7 @@ const connect = require("./config/db");
 
 const userRoutes = require("./routes/user/userRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
+const productRoutes = require("./routes/productRoutes");
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(express.json());
 // user routes
 app.use("/api", userRoutes);
 app.use("/api", categoryRoutes);
+app.use("/api", productRoutes);
 
 app.get("/", (req, res) => {
   res.json({ msg: "Welcome to revibe" });

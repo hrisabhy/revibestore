@@ -7,6 +7,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import Wrapper from "./Wrapper";
 import { useAllCategoriesQuery } from "../../store/services/categoryService";
+import { useCProductMutation } from "../../store/services/productService";
 import Spinner from "../../components/Spinner";
 import { useState } from "react";
 import SizesList from "../../components/SizesList";
@@ -71,6 +72,19 @@ const CreateProduct = () => {
     setSizeList(filtered);
   };
   console.log(data, isFetching);
+  const [createNewProduct, response] = useCProductMutation();
+  console.log("Your response", response);
+  const createPro = (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("data", JSON.stringify(state));
+    formData.append("sizes", JSON.stringify(sizeList));
+    formData.append("description", value);
+    formData.append("image1", state.image1);
+    formData.append("image2", state.image2);
+    formData.append("image3", state.image3);
+    createNewProduct(formData);
+  };
   return (
     <Wrapper>
       <ScreenHeader>
@@ -79,7 +93,7 @@ const CreateProduct = () => {
         </Link>
       </ScreenHeader>
       <div className="flex flex-wrap -mx-3">
-        <div className="w-full xl:w-8/12 p-3">
+        <form className="w-full xl:w-8/12 p-3" onSubmit={createPro}>
           <div className="flex flex-wrap">
             <div className="w-full md:w-6/12 p-3">
               <label htmlFor="title" className="label">
@@ -244,7 +258,7 @@ const CreateProduct = () => {
               />
             </div>
           </div>
-        </div>
+        </form>
         <div className="w-full xl:w-4/12 p-3">
           <Colors colors={state.colors} deleteColor={deleteColor} />
           <SizesList list={sizeList} deleteSize={deleteSize} />
