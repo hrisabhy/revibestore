@@ -1,10 +1,36 @@
 import { Link } from "react-router-dom";
+import { TwitterPicker } from "react-color";
+import { v4 as uuidv4 } from "uuid";
 import ScreenHeader from "../../components/ScreenHeader";
+import Colors from "../../components/Colors";
 import Wrapper from "./Wrapper";
 import { useAllCategoriesQuery } from "../../store/services/categoryService";
 import Spinner from "../../components/Spinner";
+import { useState } from "react";
 const CreateProduct = () => {
   const { data = [], isFetching } = useAllCategoriesQuery();
+  const [state, setState] = useState({
+    title: "",
+    price: 0,
+    discount: 0,
+    stock: 0,
+    category: "",
+    colors: [],
+  });
+  const handleInput = (e) => {
+    setState({ ...state, [e.target.name]: e.target.value });
+  };
+  const saveColors = (color) => {
+    const filtered = state.colors.filter((clr) => clr.color !== color.hex);
+    setState({
+      ...state,
+      colors: [...filtered, { color: color.hex, id: uuidv4() }],
+    });
+  };
+  const deleteColor = (color) => {
+    const filtered = state.colors.filter((clr) => clr.color !== color.color);
+    setState({ ...state, colors: filtered });
+  };
   console.log(data, isFetching);
   return (
     <Wrapper>
@@ -26,6 +52,8 @@ const CreateProduct = () => {
                 className="form-control"
                 id="title"
                 placeholder="title..."
+                onChange={handleInput}
+                value={state.title}
               />
             </div>
             <div className="w-full md:w-6/12 p-3">
@@ -38,6 +66,8 @@ const CreateProduct = () => {
                 className="form-control"
                 id="price"
                 placeholder="price..."
+                onChange={handleInput}
+                value={state.price}
               />
             </div>
             <div className="w-full md:w-6/12 p-3">
@@ -50,6 +80,8 @@ const CreateProduct = () => {
                 className="form-control"
                 id="discount"
                 placeholder="discount..."
+                onChange={handleInput}
+                value={state.discount}
               />
             </div>
             <div className="w-full md:w-6/12 p-3">
@@ -62,6 +94,8 @@ const CreateProduct = () => {
                 className="form-control"
                 id="stock"
                 placeholder="stock..."
+                onChange={handleInput}
+                value={state.stock}
               />
             </div>
             <div className="w-full md:w-6/12 p-3">
@@ -74,6 +108,8 @@ const CreateProduct = () => {
                     name="categories"
                     id="categories"
                     className="form-control"
+                    onChange={handleInput}
+                    value={state.category}
                   >
                     <option value="">Choose category</option>
                     {data?.categories?.map((category) => (
@@ -87,9 +123,17 @@ const CreateProduct = () => {
                 <Spinner />
               )}
             </div>
+            <div className="w-full md:w-6/12 p-3">
+              <label htmlFor="colors" className="label">
+                choose colors
+              </label>
+              <TwitterPicker onChangeComplete={saveColors} />
+            </div>
           </div>
         </div>
-        <div className="w-full xl:w-4/12 p-3">colors and images</div>
+        <div className="w-full xl:w-4/12 p-3">
+          <Colors colors={state.colors} deleteColor={deleteColor} />
+        </div>
       </div>
     </Wrapper>
   );
