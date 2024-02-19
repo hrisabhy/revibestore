@@ -38,4 +38,7 @@
   .right-heading {
     @apply capitalize my-2 text-gray-400 text-base;
   }
+  .input-file {
+    @apply block file:py-2.5 file:px-4 file:rounded file:cursor-pointer file:bg-indigo-600 file:text-white file:text-sm file:font-medium file:mr-4;
+  }
 }
