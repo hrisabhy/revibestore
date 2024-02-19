@@ -8,6 +8,7 @@ import { useAllCategoriesQuery } from "../../store/services/categoryService";
 import Spinner from "../../components/Spinner";
 import { useState } from "react";
 import SizesList from "../../components/SizesList";
+import ImagesPreview from "../../components/ImagesPreview";
 const CreateProduct = () => {
   const { data = [], isFetching } = useAllCategoriesQuery();
   const [state, setState] = useState({
@@ -17,6 +18,9 @@ const CreateProduct = () => {
     stock: 0,
     category: "",
     colors: [],
+    image1: "",
+    image2: "",
+    image3: "",
   });
   const [sizes] = useState([
     { name: "xsm" },
@@ -26,6 +30,21 @@ const CreateProduct = () => {
     { name: "xl" },
   ]);
   const [sizeList, setSizeList] = useState([]);
+  const [preview, setPreview] = useState({
+    image1: "",
+    image2: "",
+    image3: "",
+  });
+  const imageHandle = (e) => {
+    if (e.target.files.length !== 0) {
+      setState({ ...state, [e.target.name]: e.target.files[0] });
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview({ ...preview, [e.target.name]: reader.result });
+      };
+      reader.readAsDataURL(e.target.files[0]);
+    }
+  };
   const handleInput = (e) => {
     setState({ ...state, [e.target.name]: e.target.value });
   };
@@ -122,7 +141,7 @@ const CreateProduct = () => {
               {!isFetching ? (
                 data?.categories?.length > 0 && (
                   <select
-                    name="categories"
+                    name="category"
                     id="categories"
                     className="form-control"
                     onChange={handleInput}
@@ -173,6 +192,7 @@ const CreateProduct = () => {
                 name="image1"
                 id="image1"
                 className="input-file"
+                onChange={imageHandle}
               />
             </div>
 
@@ -185,6 +205,7 @@ const CreateProduct = () => {
                 name="image2"
                 id="image2"
                 className="input-file"
+                onChange={imageHandle}
               />
             </div>
 
@@ -197,6 +218,7 @@ const CreateProduct = () => {
                 name="image3"
                 id="image3"
                 className="input-file"
+                onChange={imageHandle}
               />
             </div>
           </div>
@@ -204,6 +226,9 @@ const CreateProduct = () => {
         <div className="w-full xl:w-4/12 p-3">
           <Colors colors={state.colors} deleteColor={deleteColor} />
           <SizesList list={sizeList} deleteSize={deleteSize} />
+          <ImagesPreview url={preview.image1} heading="image 1" />
+          <ImagesPreview url={preview.image2} heading="image 2" />
+          <ImagesPreview url={preview.image3} heading="image 3" />
         </div>
       </div>
     </Wrapper>

@@ -41,4 +41,7 @@
   .input-file {
     @apply block file:py-2.5 file:px-4 file:rounded file:cursor-pointer file:bg-indigo-600 file:text-white file:text-sm file:font-medium file:mr-4;
   }
+  .preivew-image {
+    @apply w-full max-h-[190px] h-full rounded-md overflow-hidden mt-3;
+  }
 }
