@@ -11,4 +11,5 @@ router.put(
   [Authorization.authorized, productValidations],
   Product.updateProduct
 );
+router.delete("/delete/:id", Authorization.authorized, Product.deleteProduct);
 module.exports = router;

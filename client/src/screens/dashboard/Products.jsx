@@ -1,5 +1,8 @@
 import { Link, useParams } from "react-router-dom";
-import { useGetProductsQuery } from "../../store/services/productService";
+import {
+  useGetProductsQuery,
+  useDeleteProductMutation,
+} from "../../store/services/productService";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import toast, { Toaster } from "react-hot-toast";
@@ -26,6 +29,13 @@ const Products = () => {
       dispatch(clearMessage());
     };
   }, []);
+  const [delProduct, response] = useDeleteProductMutation();
+
+  const deleteProduct = (id) => {
+    if (window.confirm("Are you really want to delete this product?")) {
+      delProduct(id);
+    }
+  };
   return (
     <Wrapper>
       <ScreenHeader>
@@ -88,9 +98,12 @@ const Products = () => {
                       </Link>
                     </td>
                     <td className="p-3 capitalize text-sm font-normal text-gray-400">
-                      <Link to={``} className="btn btn-danger">
+                      <span
+                        className="btn btn-danger cursor-pointer"
+                        onClick={() => deleteProduct(product._id)}
+                      >
                         delete
-                      </Link>
+                      </span>
                     </td>
                   </tr>
                 ))}
