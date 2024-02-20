@@ -43,9 +43,23 @@ const productService = createApi({
         },
         providesTags: ["products"],
       }),
+      updateProduct: builder.mutation({
+        query: (data) => {
+          return {
+            url: "/product",
+            method: "PUT",
+            body: data,
+          };
+        },
+        invalidatesTags: ["products"],
+      }),
     };
   },
 });
-export const { useCProductMutation, useGetProductsQuery, useGetProductQuery } =
-  productService;
+export const {
+  useCProductMutation,
+  useGetProductsQuery,
+  useGetProductQuery,
+  useUpdateProductMutation,
+} = productService;
 export default productService;

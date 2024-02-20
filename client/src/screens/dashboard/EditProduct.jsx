@@ -10,6 +10,7 @@ import ScreenHeader from "../../components/ScreenHeader";
 import Wrapper from "./Wrapper";
 import { useAllCategoriesQuery } from "../../store/services/categoryService";
 import {
+  useUpdateProductMutation,
   useCProductMutation,
   useGetProductQuery,
 } from "../../store/services/productService";
@@ -62,15 +63,11 @@ const EditProduct = () => {
     const filtered = sizeList.filter((size) => size.name !== name);
     setSizeList(filtered);
   };
-  const [createNewProduct, response] = useCProductMutation();
+  const [updateProduct, response] = useUpdateProductMutation();
   console.log("Your response", response);
   const createPro = (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append("data", JSON.stringify(state));
-    formData.append("sizes", JSON.stringify(sizeList));
-    formData.append("description", value);
-    createNewProduct(formData);
+    updateProduct(state);
   };
   useEffect(() => {
     if (!response.isSuccess) {
