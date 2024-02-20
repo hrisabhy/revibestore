@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { TwitterPicker } from "react-color";
 import { v4 as uuidv4 } from "uuid";
 import ScreenHeader from "../../components/ScreenHeader";
@@ -9,7 +9,10 @@ import Wrapper from "./Wrapper";
 import { useAllCategoriesQuery } from "../../store/services/categoryService";
 import { useCProductMutation } from "../../store/services/productService";
 import Spinner from "../../components/Spinner";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { setSuccess } from "../../store/reducers/globalReducer";
+import toast, { Toaster } from "react-hot-toast";
 import SizesList from "../../components/SizesList";
 import ImagesPreview from "../../components/ImagesPreview";
 const CreateProduct = () => {
@@ -85,6 +88,21 @@ const CreateProduct = () => {
     formData.append("image3", state.image3);
     createNewProduct(formData);
   };
+  useEffect(() => {
+    if (!response.isSuccess) {
+      response?.error?.data?.errors.map((err) => {
+        toast.error(err.msg);
+      });
+    }
+  }, [response?.error?.data?.errors]);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (response?.isSuccess) {
+      dispatch(setSuccess(response?.data?.msg));
+      navigate("/dashboard/products");
+    }
+  }, [response?.isSuccess]);
   return (
     <Wrapper>
       <ScreenHeader>
@@ -166,7 +184,8 @@ const CreateProduct = () => {
             <div className="w-full p-3">
               <input
                 type="submit"
-                value="save product"
+                value={response.isLoading ? "loading..." : "save product"}
+                disabled={response.isLoading ? true : false}
                 className="btn btn-indigo"
               />
             </div>
