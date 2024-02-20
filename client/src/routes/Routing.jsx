@@ -5,6 +5,7 @@ import Private from "./Private";
 import Public from "./Public";
 import Categories from "../screens/dashboard/Categories";
 import CreateCategory from "../screens/dashboard/CreateCategory";
+import EditProduct from "../screens/dashboard/EditProduct";
 import UpdateCategory from "../screens/dashboard/UpdateCategory";
 import CreateProduct from "../screens/dashboard/CreateProduct";
 const Routing = () => {
@@ -35,6 +36,14 @@ const Routing = () => {
             element={
               <Private>
                 <Products />
+              </Private>
+            }
+          />
+          <Route
+            path="edit-product/:id"
+            element={
+              <Private>
+                <EditProduct />
               </Private>
             }
           />
