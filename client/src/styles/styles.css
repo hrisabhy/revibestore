@@ -50,4 +50,98 @@
   .ql-container.ql-snow {
     @apply border-none bg-gray-700 !important;
   }
+  .form-label {
+    @apply block mb-1.5 text-sm font-medium capitalize text-gray-700;
+  }
+  .form-input {
+    @apply w-full border px-3 py-3 border-gray-300 rounded-md outline-none;
+  }
+  .header {
+    @apply w-full h-[300px] bg-[url('../assets/images/header.jpg')] bg-no-repeat bg-cover relative -z-10;
+  }
+  .header-cover {
+    @apply absolute inset-0 w-full h-full bg-black/40;
+  }
+  .header-heading {
+    @apply text-white text-2xl capitalize font-medium;
+  }
+  .nav {
+    @apply bg-white w-full h-[70px] flex items-center shadow-sm fixed top-0 right-0 left-0;
+  }
+  .nav-li {
+    @apply ml-8;
+  }
+  .nav-link {
+    @apply text-base font-medium text-black capitalize;
+  }
+  .nav-circle {
+    @apply flex items-center justify-center w-[22px] h-[22px] rounded-full bg-indigo-600 text-xs text-white font-medium absolute -top-2 -right-3;
+  }
+  .my-container {
+    @apply max-w-screen-xl w-full mx-auto px-6;
+  }
+  .flex-y {
+    @apply flex items-center;
+  }
+  .heading {
+    @apply text-lg capitalize font-medium;
+  }
+}
+
+.close-menu,
+.open-menu {
+  position: absolute;
+  cursor: pointer;
+  display: none;
+}
+
+.open-menu {
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+}
+
+.close-menu {
+  top: 20px;
+  right: 20px;
+}
+
+#check {
+  display: none;
+}
+
+@media (max-width: 800px) {
+  .menu {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 73%;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    right: -100%;
+    z-index: 100;
+    background-color: #000;
+    color: #fff;
+    transition: all 0.5s ease-in-out;
+    text-transform: uppercase;
+    font-size: 24px;
+  }
+
+  .menu li {
+    margin-top: 40px;
+  }
+
+  .menu li a {
+    padding: 10px;
+  }
+
+  .close-menu,
+  .open-menu {
+    display: block;
+  }
+
+  #check:checked ~ .menu {
+    right: 0;
+  }
 }

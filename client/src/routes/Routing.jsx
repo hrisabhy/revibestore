@@ -5,6 +5,9 @@ import Private from "./Private";
 import Public from "./Public";
 import Categories from "../screens/dashboard/Categories";
 import CreateCategory from "../screens/dashboard/CreateCategory";
+import Home from "../screens/home/Home";
+import Login from "../screens/home/auth/Login";
+import Register from "../screens/home/auth/Register";
 import EditProduct from "../screens/dashboard/EditProduct";
 import UpdateCategory from "../screens/dashboard/UpdateCategory";
 import CreateProduct from "../screens/dashboard/CreateProduct";
@@ -12,6 +15,9 @@ const Routing = () => {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="login" element={<Login />} />
+        <Route path="register" element={<Register />} />
         <Route path="auth">
           <Route
             path="admin-login"
