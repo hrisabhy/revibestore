@@ -22,10 +22,12 @@ module.exports.register = async (req, res) => {
         });
         const token = createToken({ id: user._id, name: user.name });
         return res
-          .status(200)
+          .status(201)
           .json({ message: "Your account has been registered", token });
       } else {
-        return res.status(400).json({ message: "Email already used" });
+        return res.status(400).json({
+          errors: [{ msg: `${email} is already taken`, param: "email" }],
+        });
       }
     } catch (err) {
       console.log(err.message);

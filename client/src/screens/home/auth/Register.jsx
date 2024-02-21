@@ -1,8 +1,52 @@
-import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import Nav from "../../../components/home/Nav";
+import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { useUserRegisterMutation } from "../../../store/services/authService";
+import { setUserToken } from "../../../store/reducers/authReducer";
+import { setSuccess } from "../../../store/reducers/globalReducer";
 
 const Register = () => {
+  const [errors, setErrors] = useState([]);
+  const [state, setState] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+  const [registerUser, response] = useUserRegisterMutation();
+  console.log(response);
+  const onChange = (e) => {
+    setState({ ...state, [e.target.name]: e.target.value });
+  };
+  const onSubmit = (e) => {
+    e.preventDefault();
+    registerUser(state);
+  };
+  useEffect(() => {
+    if (response.isError) {
+      setErrors(response?.error?.data?.errors);
+    }
+  }, [response?.error?.data]);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (response.isSuccess) {
+      localStorage.setItem("userToken", response?.data?.token);
+      dispatch(setUserToken(response?.data?.token));
+      dispatch(setSuccess(response?.data?.msg));
+      navigate("/user");
+    }
+  }, [response.isSuccess]);
+  const showError = (name) => {
+    const exist = errors.find((err) => err.path === name);
+    console.log(exist);
+    if (exist) {
+      return exist.msg;
+    } else {
+      return false;
+    }
+  };
   return (
     <>
       <Nav />
@@ -32,7 +76,7 @@ const Register = () => {
               <h3 className="my-4 text-2xl font-semibold text-gray-700">
                 Register Account
               </h3>
-              <form action="#" className="flex flex-col space-y-5">
+              <form className="flex flex-col space-y-5" onSubmit={onSubmit}>
                 <div className="flex flex-col space-y-1">
                   <label
                     htmlFor="name"
@@ -43,9 +87,21 @@ const Register = () => {
                   <input
                     type="text"
                     id="name"
+                    name="name"
                     autoFocus=""
-                    className="px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200"
+                    className={`px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200
+                    ${
+                      showError("name")
+                        ? "border-rose-600 bg-rose-50"
+                        : "border-gray-300 bg-white"
+                    }
+                    `}
+                    value={state.name}
+                    onChange={onChange}
                   />
+                  {showError("name") && (
+                    <span className="error">{showError("name")}</span>
+                  )}
                 </div>
                 <div className="flex flex-col space-y-1">
                   <label
@@ -57,9 +113,21 @@ const Register = () => {
                   <input
                     type="email"
                     id="email"
+                    name="email"
                     autoFocus=""
-                    className="px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200"
+                    className={`px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200
+                    ${
+                      showError("email")
+                        ? "border-rose-600 bg-rose-50"
+                        : "border-gray-300 bg-white"
+                    }
+                    `}
+                    value={state.email}
+                    onChange={onChange}
                   />
+                  {showError("email") && (
+                    <span className="error">{showError("email")}</span>
+                  )}
                 </div>
                 <div className="flex flex-col space-y-1">
                   <div className="flex items-center justify-between">
@@ -73,8 +141,20 @@ const Register = () => {
                   <input
                     type="password"
                     id="password"
-                    className="px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200"
+                    name="password"
+                    className={`px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200
+                    ${
+                      showError("password")
+                        ? "border-rose-600 bg-rose-50"
+                        : "border-gray-300 bg-white"
+                    }
+                    `}
+                    value={state.password}
+                    onChange={onChange}
                   />
+                  {showError("password") && (
+                    <span className="error">{showError("password")}</span>
+                  )}
                 </div>
                 <div className="flex items-center space-x-2">
                   <input
@@ -90,12 +170,12 @@ const Register = () => {
                   </label>
                 </div>
                 <div>
-                  <button
+                  <input
                     type="submit"
+                    value={`${response.isLoading ? "Loading..." : "Register"}`}
                     className="w-full px-4 py-2 text-lg font-semibold text-white transition-colors duration-300 bg-blue-500 rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-blue-200 focus:ring-4"
-                  >
-                    Register
-                  </button>
+                    disabled={response.isLoading ? true : false}
+                  />
                 </div>
               </form>
             </div>

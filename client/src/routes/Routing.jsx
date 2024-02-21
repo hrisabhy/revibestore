@@ -7,6 +7,7 @@ import Categories from "../screens/dashboard/Categories";
 import CreateCategory from "../screens/dashboard/CreateCategory";
 import Home from "../screens/home/Home";
 import Login from "../screens/home/auth/Login";
+import Dashboard from "../screens/users/dashboard";
 import Register from "../screens/home/auth/Register";
 import EditProduct from "../screens/dashboard/EditProduct";
 import UpdateCategory from "../screens/dashboard/UpdateCategory";
@@ -18,6 +19,7 @@ const Routing = () => {
         <Route path="/" element={<Home />} />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
+        <Route path="user" element={<Dashboard />} />
         <Route path="auth">
           <Route
             path="admin-login"
