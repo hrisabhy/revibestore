@@ -6,19 +6,17 @@ import { useDispatch } from "react-redux";
 import { useUserRegisterMutation } from "../../../store/services/authService";
 import { setUserToken } from "../../../store/reducers/authReducer";
 import { setSuccess } from "../../../store/reducers/globalReducer";
+import { showError } from "../../../utils/showError";
+import { useForm } from "../../../hooks/Form";
 
 const Register = () => {
   const [errors, setErrors] = useState([]);
-  const [state, setState] = useState({
+  const { state, onChange } = useForm({
     name: "",
     email: "",
     password: "",
   });
   const [registerUser, response] = useUserRegisterMutation();
-  console.log(response);
-  const onChange = (e) => {
-    setState({ ...state, [e.target.name]: e.target.value });
-  };
   const onSubmit = (e) => {
     e.preventDefault();
     registerUser(state);
@@ -38,14 +36,6 @@ const Register = () => {
       navigate("/user");
     }
   }, [response.isSuccess]);
-  const showError = (name) => {
-    const exist = errors.find((err) => err.path === name);
-    if (exist) {
-      return exist.msg;
-    } else {
-      return false;
-    }
-  };
   return (
     <>
       <Nav />
@@ -90,7 +80,7 @@ const Register = () => {
                     autoFocus=""
                     className={`px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200
                     ${
-                      showError("name")
+                      showError(errors, "name")
                         ? "border-rose-600 bg-rose-50"
                         : "border-gray-300 bg-white"
                     }
@@ -98,8 +88,8 @@ const Register = () => {
                     value={state.name}
                     onChange={onChange}
                   />
-                  {showError("name") && (
-                    <span className="error">{showError("name")}</span>
+                  {showError(errors, "name") && (
+                    <span className="error">{showError(errors, "name")}</span>
                   )}
                 </div>
                 <div className="flex flex-col space-y-1">
@@ -116,7 +106,7 @@ const Register = () => {
                     autoFocus=""
                     className={`px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200
                     ${
-                      showError("email")
+                      showError(errors, "email")
                         ? "border-rose-600 bg-rose-50"
                         : "border-gray-300 bg-white"
                     }
@@ -124,8 +114,8 @@ const Register = () => {
                     value={state.email}
                     onChange={onChange}
                   />
-                  {showError("email") && (
-                    <span className="error">{showError("email")}</span>
+                  {showError(errors, "email") && (
+                    <span className="error">{showError(errors, "email")}</span>
                   )}
                 </div>
                 <div className="flex flex-col space-y-1">
@@ -143,7 +133,7 @@ const Register = () => {
                     name="password"
                     className={`px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200
                     ${
-                      showError("password")
+                      showError(errors, "password")
                         ? "border-rose-600 bg-rose-50"
                         : "border-gray-300 bg-white"
                     }
@@ -151,8 +141,10 @@ const Register = () => {
                     value={state.password}
                     onChange={onChange}
                   />
-                  {showError("password") && (
-                    <span className="error">{showError("password")}</span>
+                  {showError(errors, "password") && (
+                    <span className="error">
+                      {showError(errors, "password")}
+                    </span>
                   )}
                 </div>
                 <div className="flex items-center space-x-2">
