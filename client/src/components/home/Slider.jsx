@@ -39,7 +39,10 @@ const Slider = () => {
                   {cat.name}
                 </h1>
                 <div className="mt-10">
-                  <Link to="/" className="btn btn-indigo text-sm">
+                  <Link
+                    to={`/cat-products/${cat.name}`}
+                    className="btn btn-indigo text-sm"
+                  >
                     browse collections
                   </Link>
                 </div>
