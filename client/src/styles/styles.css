@@ -89,6 +89,15 @@
   .error {
     @apply block mt-1.5 text-rose-600 font-medium text-sm;
   }
+  a.active {
+    @apply bg-gray-50;
+  }
+  .account-list {
+    @apply flex items-center px-3 py-3.5 rounded-md;
+  }
+  .account-list-title {
+    @apply block ml-3 font-medium text-sm text-gray-700 capitalize;
+  }
 }
 
 .close-menu,
