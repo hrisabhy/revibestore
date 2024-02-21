@@ -40,7 +40,6 @@ const Register = () => {
   }, [response.isSuccess]);
   const showError = (name) => {
     const exist = errors.find((err) => err.path === name);
-    console.log(exist);
     if (exist) {
       return exist.msg;
     } else {

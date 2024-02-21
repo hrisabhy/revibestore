@@ -26,7 +26,7 @@ module.exports.register = async (req, res) => {
           .json({ message: "Your account has been registered", token });
       } else {
         return res.status(400).json({
-          errors: [{ msg: `${email} is already taken`, param: "email" }],
+          errors: [{ msg: `${email} is already taken`, path: "email" }],
         });
       }
     } catch (err) {
@@ -53,14 +53,14 @@ module.exports.login = async (req, res) => {
             return res.status(201).json({ token, admin: true });
           }
         } else {
-          return res
-            .status(400)
-            .json({ errors: [{ msg: "password not matched!" }] });
+          return res.status(400).json({
+            errors: [{ msg: "password not matched!", path: "password" }],
+          });
         }
       } else {
         return res
           .status(400)
-          .json({ errors: [{ msg: `${email} is not found` }] });
+          .json({ errors: [{ msg: `${email} is not found`, path: "email" }] });
       }
     } catch (error) {
       console.log(error.message);
