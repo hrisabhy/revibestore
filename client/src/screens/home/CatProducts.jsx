@@ -29,8 +29,8 @@ const CatProducts = () => {
               {data.count} products found in #{name} category
             </p>
             <div className="flex flex-wrap -mx-5">
-              {data.products.map((product, index) => {
-                return <ProductCard product={product} key={index} />;
+              {data.products.map((product) => {
+                return <ProductCard product={product} key={product._id} />;
               })}
             </div>
             <Pagination

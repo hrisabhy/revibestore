@@ -1,6 +1,7 @@
 import currency from "currency-formatter";
 import h2p from "html2plaintext";
 import htmlParser from "html-react-parser";
+import { motion } from "framer-motion";
 import DetailsImage from "./DetailsImage";
 import Quantity from "./Quantity";
 import { useState } from "react";
@@ -19,7 +20,11 @@ const DetailsCard = ({ product }) => {
   let desc = h2p(product.description);
   desc = htmlParser(desc);
   return (
-    <div className="flex flex-wrap -mx-5">
+    <motion.div
+      className="flex flex-wrap -mx-5"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+    >
       <div className="w-full order-2 md:order-1 md:w-6/12 p-5">
         <div className="flex flex-wrap -mx-1">
           <DetailsImage image={product.image1} />
@@ -92,7 +97,7 @@ const DetailsCard = ({ product }) => {
         </h3>
         <div className="mt-4 leading-[27px] description">{desc}</div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
