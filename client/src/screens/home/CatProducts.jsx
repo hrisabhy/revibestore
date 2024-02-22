@@ -6,6 +6,8 @@ import Text from "../../components/skeleton/Text";
 import Skeleton from "../../components/skeleton/Skeleton";
 import Thumbnail from "../../components/skeleton/Thumbnail";
 import { useCatProductsQuery } from "../../store/services/homeProducts";
+import ProductCard from "../../components/home/ProductCard";
+import Pagination from "../../components/Pagination";
 
 const CatProducts = () => {
   const { name, page = 1 } = useParams();
@@ -30,7 +32,7 @@ const CatProducts = () => {
                 key={item}
               >
                 <Skeleton>
-                  <Thumbnail />
+                  <Thumbnail height="320px" />
                   <Text mt="10px" />
                   <Text mt="10px" />
                 </Skeleton>
@@ -43,40 +45,17 @@ const CatProducts = () => {
               {data.count} products found in #{name} category
             </p>
             <div className="flex flex-wrap -mx-5">
-              {data.products.map((product) => {
-                const percentage = product.discount / 100;
-                const discountPrice =
-                  product.price - product.price * percentage;
-                console.log(discountPrice);
-                return (
-                  <div
-                    className="w-full md:w-3/12 px-5 py-10"
-                    key={product._id}
-                  >
-                    <Link to="/">
-                      <div className="w-full">
-                        <img
-                          src={`/images/${product.image1}`}
-                          alt="product image"
-                          className="w-full h-[310px] object-cover"
-                        />
-                      </div>
-                      <p className="capitalize text-base font-medium text-black my-2.5">
-                        {product.title}
-                      </p>
-                      <div className="flex justify-between">
-                        <span className="text-lg font-medium text-black">
-                          {currency.format(discountPrice, { code: "USD" })}
-                        </span>
-                        <span className="text-lg font-medium text-gray-600 line-through">
-                          {currency.format(product.price, { code: "USD" })}
-                        </span>
-                      </div>
-                    </Link>
-                  </div>
-                );
+              {data.products.map((product, index) => {
+                return <ProductCard product={product} key={index} />;
               })}
             </div>
+            <Pagination
+              page={parseInt(page)}
+              perPage={data.perPage}
+              count={data.count}
+              path={`cat-products/${name}`}
+              theme="light"
+            />
           </>
         ) : (
           <p className="alert-danger">No products found in #{name} category</p>
