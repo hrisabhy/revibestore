@@ -1,9 +1,13 @@
 import currency from "currency-formatter";
 import h2p from "html2plaintext";
 import htmlParser from "html-react-parser";
+import toast, { Toaster } from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { addCart } from "../../store/reducers/cartReducer";
 import { motion } from "framer-motion";
 import DetailsImage from "./DetailsImage";
 import { BsCheck2 } from "react-icons/bs";
+import { discount } from "../../utils/discount";
 import Quantity from "./Quantity";
 import { useState } from "react";
 const DetailsCard = ({ product }) => {
@@ -13,6 +17,30 @@ const DetailsCard = ({ product }) => {
   const [colorState, setColorState] = useState(
     product?.colors?.length > 0 && product.colors[0].color
   );
+  const dispatch = useDispatch();
+  const addToCart = () => {
+    const {
+      ["colors"]: colors,
+      ["sizes"]: sizes,
+      ["createdAt"]: createdAt,
+      ["updatedAt"]: updatedAt,
+      ...newProduct
+    } = product;
+    newProduct["size"] = sizeState;
+    newProduct["color"] = colorState;
+    newProduct["quantity"] = quantity;
+    const cart = localStorage.getItem("cart");
+    const cartItems = cart ? JSON.parse(cart) : [];
+    const checkItem = cartItems.find((item) => item._id === newProduct._id);
+    if (!checkItem) {
+      dispatch(addCart(newProduct));
+      cartItems.push(newProduct);
+      localStorage.setItem("cart", JSON.stringify(cartItems));
+    } else {
+      toast.error(`${newProduct.title} is already in cart`);
+      return;
+    }
+  };
   const [quantity, setQuantity] = useState(1);
   const inc = () => {
     setQuantity(quantity + 1);
@@ -22,8 +50,7 @@ const DetailsCard = ({ product }) => {
       setQuantity(quantity - 1);
     }
   };
-  const percentage = product.discount / 100;
-  const discountPrice = product.price - product.price * percentage;
+  const discountPrice = discount(product.price, product.discount);
   let desc = h2p(product.description);
   desc = htmlParser(desc);
   return (
@@ -32,6 +59,7 @@ const DetailsCard = ({ product }) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
     >
+      <Toaster />
       <div className="w-full order-2 md:order-1 md:w-6/12 p-5">
         <div className="flex flex-wrap -mx-1">
           <DetailsImage image={product.image1} />
@@ -108,7 +136,9 @@ const DetailsCard = ({ product }) => {
             <Quantity quantity={quantity} inc={inc} dec={dec} />
           </div>
           <div className="w-full sm:w-6/12 p-3">
-            <button className="btn btn-indigo">add to cart</button>
+            <button className="btn btn-indigo" onClick={addToCart}>
+              add to cart
+            </button>
           </div>
         </div>
         <h3 className="text-base font-medium capitalize text-gray-600 mb-2 mt-3">
