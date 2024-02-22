@@ -2,12 +2,20 @@ import { FiSearch } from "react-icons/fi";
 import { useSelector, useDispatch } from "react-redux";
 import { motion } from "framer-motion";
 import { toggleSearchBar } from "../../store/reducers/globalReducer";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 const Search = () => {
+  const navgiate = useNavigate();
+  const [state, setState] = useState("");
   const { searchBar } = useSelector((state) => state.globalReducer);
   const dispatch = useDispatch();
   const closeSearch = (e) => {
     const id = e.target.getAttribute("id");
     id === "search" && dispatch(toggleSearchBar());
+  };
+  const searchProducts = () => {
+    navgiate(`/search-products/${state}/1`);
+    dispatch(toggleSearchBar());
   };
   return (
     searchBar && (
@@ -26,8 +34,13 @@ const Search = () => {
               id=""
               className="w-full bg-white h-[50px] rounded outline-none pl-5 pr-14"
               placeholder="Search products...."
+              value={state}
+              onChange={(e) => setState(e.target.value)}
             />
-            <FiSearch className="absolute top-[13px] right-12 text-2xl text-gray-500" />
+            <FiSearch
+              className="absolute top-[13px] right-12 text-2xl text-gray-500"
+              onClick={searchProducts}
+            />
           </div>
         </div>
       </motion.div>
