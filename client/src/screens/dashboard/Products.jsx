@@ -77,7 +77,7 @@ const Products = () => {
                       {product.title}
                     </td>
                     <td className="p-3 capitalize text-sm font-normal text-gray-400">
-                      ${product.price}.00
+                      ₹{product.price}.00
                     </td>
                     <td className="p-3 capitalize text-sm font-normal text-gray-400">
                       {product.stock}
