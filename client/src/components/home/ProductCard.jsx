@@ -24,10 +24,16 @@ const ProductCard = ({ product }) => {
         </p>
         <div className="flex justify-between">
           <span className="text-lg font-medium text-black">
-            {currency.format(discountPrice, { code: "USD" })}
+            {new Intl.NumberFormat("en-IN", {
+              style: "currency",
+              currency: "INR",
+            }).format(discountPrice)}
           </span>
           <span className="text-lg font-medium text-gray-600 line-through">
-            {currency.format(product.price, { code: "USD" })}
+            {new Intl.NumberFormat("en-US", {
+              style: "currency",
+              currency: "INR",
+            }).format(product.price)}
           </span>
         </div>
       </Link>

@@ -28,22 +28,55 @@ const Cart = () => {
     if (userToken) {
       try {
         if (!razorPayKey) return;
-        const amountInPaise = Number(amount * 100);
-        console.log(typeof amountInPaise);
         const { data } = await initiatePayment({
           amount,
           currency: "INR",
         });
         const options = {
           key: razorPayKey, // Use the fetched Razorpay key
-          amount: amountInPaise,
+          amount: data.order.amount,
           currency: "INR",
           name: "Revibe Store",
           description: "Description of the product/service",
           image:
             "https://res.cloudinary.com/dipglpaot/image/upload/v1708679838/j96b6ngkz6drm0zniybp.png", // URL to your company logo
-          order_id: data.id,
-          callback_url: "http://localhost:5000/api/payment/verify", // URL to handle payment verification
+          order_id: data.order.id,
+          handler: async (response) => {
+            try {
+              // Send payment details to backend for verification
+              const verificationResponse = await fetch(
+                "http://localhost:5000/api/payment/verify",
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    razorpay_order_id: data.order.id,
+                    razorpay_payment_id: response.razorpay_payment_id,
+                    razorpay_signature: response.razorpay_signature,
+                  }),
+                }
+              );
+              console.log(verificationResponse);
+
+              if (!verificationResponse.ok) {
+                throw new Error(
+                  `Payment verification failed: ${verificationResponse.statusText}`
+                );
+              }
+
+              // Handle successful verification
+              if (verificationResponse.statusText == "OK") {
+                navigate("/user");
+              }
+            } catch (error) {
+              // Handle verification error
+              alert(`Payment verification failed: ${error.message}`);
+              console.error(error);
+              // Log the error and take appropriate actions
+            }
+          },
           prefill: {
             name: user?.name,
             email: "user@example.com",
