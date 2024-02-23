@@ -74,10 +74,16 @@ const DetailsCard = ({ product }) => {
         <div className="flex justify-between my-5">
           <span className="text-2xl font-bold text-gray-900">
             {" "}
-            {currency.format(discountPrice, { code: "USD" })}
+            {new Intl.NumberFormat("en-IN", {
+              style: "currency",
+              currency: "INR",
+            }).format(discountPrice)}
           </span>
           <span className="text-xl line-through text-gray-500">
-            {currency.format(product.price, { code: "USD" })}
+            {new Intl.NumberFormat("en-US", {
+              style: "currency",
+              currency: "INR",
+            }).format(product.price)}
           </span>
         </div>
         {product.sizes.length > 0 && (

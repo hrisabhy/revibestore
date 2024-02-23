@@ -9,11 +9,67 @@ import {
   decQuantity,
   removeItem,
 } from "../../store/reducers/cartReducer";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  useFetchRazorpayKeyQuery,
+  useInitiatePaymentMutation,
+} from "../../store/services/paymentService";
+import { useEffect } from "react";
 
 const Cart = () => {
+  const { userToken, user } = useSelector((state) => state.authReducer);
+  const navigate = useNavigate();
+  const [initiatePayment, response] = useInitiatePaymentMutation();
+  const { data = [], isFetching } = useFetchRazorpayKeyQuery();
+  const razorPayKey = data.key;
   const { cart, total } = useSelector((state) => state.cartReducer);
   const dispatch = useDispatch();
+  const pay = async (amount) => {
+    if (userToken) {
+      try {
+        if (!razorPayKey) return;
+        const amountInPaise = Number(amount * 100);
+        console.log(typeof amountInPaise);
+        const { data } = await initiatePayment({
+          amount,
+          currency: "INR",
+        });
+        const options = {
+          key: razorPayKey, // Use the fetched Razorpay key
+          amount: amountInPaise,
+          currency: "INR",
+          name: "Revibe Store",
+          description: "Description of the product/service",
+          image:
+            "https://res.cloudinary.com/dipglpaot/image/upload/v1708679838/j96b6ngkz6drm0zniybp.png", // URL to your company logo
+          order_id: data.id,
+          callback_url: "http://localhost:5000/api/payment/verify", // URL to handle payment verification
+          prefill: {
+            name: user?.name,
+            email: "user@example.com",
+            contact: "9999999999",
+          },
+          notes: {
+            address: "User Address", // Additional notes if needed
+          },
+          theme: {
+            color: "#121212", // Customize the checkout theme color
+          },
+        };
+        const razor = new window.Razorpay(options);
+        razor.open();
+      } catch (error) {
+        console.error("Error initiating payment", error.message);
+      }
+    } else {
+      navigate("/login");
+    }
+  };
+  useEffect(() => {
+    if (response?.isSuccess) {
+      console.log("Success");
+    }
+  }, [response]);
   const inc = (id) => {
     dispatch(incQuantity(id));
   };
@@ -98,18 +154,17 @@ const Cart = () => {
             <div className="bg-indigo-50 p-4 flex justify-end mt-5 rounded-md">
               <div>
                 <span className="text-lg font-semibold text-indigo-800 mr-10">
-                  {/* {currency.format(total, { code: "USD" })} */}
                   {new Intl.NumberFormat("en-IN", {
                     style: "currency",
                     currency: "INR",
                   }).format(total)}
                 </span>
-                <Link
-                  to="/"
+                <button
                   className="btn bg-indigo-600 text-sm font-medium py-2.5"
+                  onClick={() => pay(total)}
                 >
                   checkout
-                </Link>
+                </button>
               </div>
             </div>
           </>
