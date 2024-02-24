@@ -14,9 +14,10 @@ import {
   useFetchRazorpayKeyQuery,
   useInitiatePaymentMutation,
 } from "../../store/services/paymentService";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const Cart = () => {
+  const [address, setAddress] = useState("");
   const { userToken, user } = useSelector((state) => state.authReducer);
   const navigate = useNavigate();
   const [initiatePayment, response] = useInitiatePaymentMutation();
@@ -24,6 +25,13 @@ const Cart = () => {
   const razorPayKey = data.key;
   const { cart, total } = useSelector((state) => state.cartReducer);
   const dispatch = useDispatch();
+  const orderData = cart.map((item) => ({
+    productId: item._id,
+    size: item.size,
+    color: item.color,
+    quantity: item.quantity,
+  }));
+  const userId = user.id;
   const pay = async (amount) => {
     if (userToken) {
       try {
@@ -33,7 +41,7 @@ const Cart = () => {
           currency: "INR",
         });
         const options = {
-          key: razorPayKey, // Use the fetched Razorpay key
+          key: razorPayKey,
           amount: data.order.amount,
           currency: "INR",
           name: "Revibe Store",
@@ -43,7 +51,6 @@ const Cart = () => {
           order_id: data.order.id,
           handler: async (response) => {
             try {
-              // Send payment details to backend for verification
               const verificationResponse = await fetch(
                 "http://localhost:5000/api/payment/verify",
                 {
@@ -55,6 +62,9 @@ const Cart = () => {
                     razorpay_order_id: data.order.id,
                     razorpay_payment_id: response.razorpay_payment_id,
                     razorpay_signature: response.razorpay_signature,
+                    address,
+                    userId,
+                    items: orderData,
                   }),
                 }
               );
@@ -118,95 +128,142 @@ const Cart = () => {
   return (
     <>
       <Nav />
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="my-container mt-28"
-      >
-        {cart.length > 0 ? (
-          <>
-            <div className="table-container">
-              <table className="w-full">
-                <thead>
-                  <tr className="thead-tr">
-                    <th className="th">image</th>
-                    <th className="th">name</th>
-                    <th className="th">price</th>
-                    <th className="th">quantities</th>
-                    <th className="th">total</th>
-                    <th className="th">delete</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {cart.map((item, key) => {
-                    const total = new Intl.NumberFormat("en-IN", {
+      <div className="mt-32 container mx-auto mt-10">
+        <div className="flex shadow-md my-10">
+          <div className="w-3/4 bg-white px-10 py-10">
+            <div className="flex justify-between border-b pb-8">
+              <h1 className="font-semibold text-2xl">Shopping Cart</h1>
+              <h2 className="font-semibold text-2xl">3 Items</h2>
+            </div>
+            <div className="flex mt-10 mb-5">
+              <h3 className="font-semibold text-gray-600 text-xs uppercase w-2/5">
+                Product Details
+              </h3>
+              <h3 className="font-semibold text-center text-gray-600 text-xs uppercase w-1/5 text-center">
+                Quantity
+              </h3>
+              <h3 className="font-semibold text-center text-gray-600 text-xs uppercase w-1/5 text-center">
+                Price
+              </h3>
+              <h3 className="font-semibold text-center text-gray-600 text-xs uppercase w-1/5 text-center">
+                Total
+              </h3>
+            </div>
+            {cart.map((item, key) => {
+              const total = new Intl.NumberFormat("en-IN", {
+                style: "currency",
+                currency: "INR",
+              }).format(discount(item.price, item.discount) * item.quantity);
+              return (
+                <div
+                  className="flex items-center hover:bg-gray-100 -mx-8 px-6 py-5"
+                  key={item._id}
+                >
+                  <div className="flex w-2/5">
+                    <div className="w-20">
+                      <img
+                        src={`/images/${item.image1}`}
+                        alt={item.title}
+                        className="h-24"
+                      />
+                    </div>
+                    <div className="flex flex-col justify-between ml-4 flex-grow">
+                      <span className="font-bold text-sm">{item.title}</span>
+                      <span
+                        onClick={() => remove(item._id)}
+                        className="font-semibold hover:text-red-500 text-gray-500 text-xs"
+                      >
+                        Remove
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex justify-center w-1/5">
+                    <svg
+                      className="fill-current text-gray-600 w-3"
+                      viewBox="0 0 448 512"
+                      onClick={() => dec(item._id)}
+                    >
+                      <path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
+                    </svg>
+                    <span className="mx-2 border text-center w-8">
+                      {item.quantity}
+                    </span>
+
+                    <svg
+                      className="fill-current text-gray-600 w-3"
+                      viewBox="0 0 448 512"
+                      onClick={() => inc(item._id)}
+                    >
+                      <path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
+                    </svg>
+                  </div>
+                  <span className="text-center w-1/5 font-semibold text-sm">
+                    {new Intl.NumberFormat("en-IN", {
                       style: "currency",
                       currency: "INR",
-                    }).format(
-                      discount(item.price, item.discount) * item.quantity
-                    );
-                    return (
-                      <tr className="even:bg-gray-50" key={item._id}>
-                        <td className="td">
-                          <img
-                            src={`/images/${item.image1}`}
-                            alt={item.title}
-                            className="w-12 h-12 object-cover rounded-full"
-                          />
-                        </td>
-                        <td className="td font-medium">{item.title}</td>
-                        <td className="td font-bold text-gray-900">
-                          {new Intl.NumberFormat("en-IN", {
-                            style: "currency",
-                            currency: "INR",
-                          }).format(discount(item.price, item.discount))}
-                        </td>
-                        <td className="td">
-                          <Quantity
-                            quantity={item.quantity}
-                            inc={() => inc(item._id)}
-                            dec={() => dec(item._id)}
-                            theme="indigo"
-                          />
-                        </td>
-                        <td className="td font-bold ">{total}</td>
-                        <td>
-                          <span
-                            className="cursor-pointer"
-                            onClick={() => remove(item._id)}
-                          >
-                            <BsTrash className="text-rose-600" size={20} />
-                          </span>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+                    }).format(discount(item.price, item.discount))}
+                  </span>
+                  <span className="text-center w-1/5 font-semibold text-sm">
+                    {total}
+                  </span>
+                </div>
+              );
+            })}
+
+            <Link
+              to="/"
+              className="flex font-semibold text-indigo-600 text-sm mt-10"
+            >
+              <svg
+                className="fill-current mr-2 text-indigo-600 w-4"
+                viewBox="0 0 448 512"
+              >
+                <path d="M134.059 296H436c6.627 0 12-5.373 12-12v-56c0-6.627-5.373-12-12-12H134.059v-46.059c0-21.382-25.851-32.09-40.971-16.971L7.029 239.029c-9.373 9.373-9.373 24.569 0 33.941l86.059 86.059c15.119 15.119 40.971 4.411 40.971-16.971V296z" />
+              </svg>
+              Continue Shopping
+            </Link>
+          </div>
+
+          <div id="summary" className="w-1/4 px-8 py-10">
+            <h1 className="font-semibold text-2xl border-b pb-8">
+              Order Summary
+            </h1>
+            <div className="flex justify-between mt-10 mb-5">
+              <span className="font-semibold text-sm uppercase">
+                {orderData.length} Products
+              </span>
             </div>
-            <div className="bg-indigo-50 p-4 flex justify-end mt-5 rounded-md">
-              <div>
-                <span className="text-lg font-semibold text-indigo-800 mr-10">
+            <div>
+              <label className="font-medium inline-block mb-3 text-sm uppercase">
+                Shipping Address
+              </label>
+              <input
+                type="text"
+                className="form-input"
+                value={address}
+                onChange={(event) => setAddress(event.target.value)}
+              />
+            </div>
+            <div className="border-t mt-8">
+              <div className="flex font-semibold justify-between py-6 text-sm uppercase">
+                <span>Total cost</span>
+                <span>
                   {new Intl.NumberFormat("en-IN", {
                     style: "currency",
                     currency: "INR",
                   }).format(total)}
                 </span>
-                <button
-                  className="btn bg-indigo-600 text-sm font-medium py-2.5"
-                  onClick={() => pay(total)}
-                >
-                  checkout
-                </button>
               </div>
+              <button
+                className="btn-indigo font-semibold hover:bg-[#33548a] py-3 text-sm text-white uppercase w-full"
+                onClick={() => pay(total)}
+              >
+                Checkout
+              </button>
             </div>
-          </>
-        ) : (
-          <div className="bg-indigo-50 border border-indigo-100 p-4 rounded-md text-sm font-medium text-indigo-800">
-            Cart is empty!
           </div>
-        )}
-      </motion.div>
+        </div>
+      </div>
     </>
   );
 };

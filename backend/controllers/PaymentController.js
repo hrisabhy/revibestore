@@ -1,6 +1,8 @@
 const env = require("../config/envConfig");
 const razorpayInstance = require("../config/razorpayInstance");
 const crypto = require("node:crypto");
+const OrderModel = require("../models/OrderModel");
+const ProductModel = require("../models/ProductModel");
 class PaymentController {
   async getKey(req, res) {
     try {
@@ -26,8 +28,17 @@ class PaymentController {
   }
   async verifyPayment(req, res) {
     try {
-      const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
-        req.body;
+      const {
+        items,
+        address,
+        userId,
+        razorpay_order_id,
+        razorpay_payment_id,
+        razorpay_signature,
+      } = req.body;
+      console.log(address);
+      console.log(userId);
+      console.log(items);
       const body = razorpay_order_id + "|" + razorpay_payment_id;
       console.log(body);
       const expectedSignature = crypto
@@ -36,6 +47,33 @@ class PaymentController {
         .digest("hex");
       const isAuthentic = expectedSignature === razorpay_signature;
       if (isAuthentic) {
+        items.forEach(async (item) => {
+          try {
+            await OrderModel.create({
+              productId: item.productId,
+              userId,
+              size: item.size,
+              color: item.color,
+              quantities: item.quantity,
+              address,
+            });
+            const product = await ProductModel.findOne({ _id: item.productId });
+            if (product) {
+              let stock = product.stock - item.quantity;
+              if (stock < 0) {
+                stock = 0;
+              }
+              await ProductModel.findByIdAndUpdate(
+                item.productId,
+                { stock },
+                { new: true }
+              );
+            }
+          } catch (error) {
+            console.log(error.message);
+            return res.status(500).json("Server internal error");
+          }
+        });
         res.redirect("http://localhost:5173/user");
       }
     } catch (error) {
