@@ -15,6 +15,7 @@ import {
   useInitiatePaymentMutation,
 } from "../../store/services/paymentService";
 import { useEffect, useState } from "react";
+import { emptyCart } from "../../store/reducers/cartReducer";
 
 const Cart = () => {
   const [address, setAddress] = useState("");
@@ -78,6 +79,7 @@ const Cart = () => {
 
               // Handle successful verification
               if (verificationResponse.statusText == "OK") {
+                dispatch(emptyCart());
                 navigate("/user");
               }
             } catch (error) {
