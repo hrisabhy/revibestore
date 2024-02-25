@@ -4,11 +4,14 @@ import { MdOutlineKeyboardBackspace } from "react-icons/md";
 import ScreenHeader from "../../components/ScreenHeader";
 import Wrapper from "./Wrapper";
 import Spinner from "../../components/Spinner";
-import { useDetailsQuery } from "../../store/services/orderService";
 import { discount } from "../../utils/discount";
 import { useRef } from "react";
 import ReactToPrint from "react-to-print";
 import { BsPrinter } from "react-icons/bs";
+import {
+  useDetailsQuery,
+  useDeliverOrderMutation,
+} from "../../store/services/orderService";
 
 const OrderDetails = () => {
   const { id } = useParams();
@@ -20,6 +23,10 @@ const OrderDetails = () => {
       data?.details?.productId?.price,
       data?.details?.productId?.discount
     ) * data?.details?.quantities;
+  const [sentUserOrder, response] = useDeliverOrderMutation();
+  const sentOrder = () => {
+    sentUserOrder(data?.details?._id);
+  };
   return (
     <Wrapper>
       <ScreenHeader>
@@ -37,6 +44,16 @@ const OrderDetails = () => {
               )}
               content={() => componentRef.current}
             />
+          </span>
+          <span className="ml-4">
+            {!data?.details?.status && (
+              <button
+                className="btn bg-orange-600 py-1 text-sm font-semibold px-3"
+                onClick={sentOrder}
+              >
+                {response?.isLoading ? "Loading..." : "Mark as Delivered"}
+              </button>
+            )}
           </span>
         </div>
       </ScreenHeader>
