@@ -8,6 +8,7 @@ const userRoutes = require("./routes/user/userRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const productRoutes = require("./routes/productRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
+const orderRoutes = require("./routes/orderRoutes");
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.use("/api", userRoutes);
 app.use("/api", categoryRoutes);
 app.use("/api", productRoutes);
 app.use("/api", paymentRoutes);
+app.use("/api", orderRoutes);
 
 app.get("/", (req, res) => {
   res.json({ msg: "Welcome to revibe" });

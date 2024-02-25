@@ -36,11 +36,7 @@ class PaymentController {
         razorpay_payment_id,
         razorpay_signature,
       } = req.body;
-      console.log(address);
-      console.log(userId);
-      console.log(items);
       const body = razorpay_order_id + "|" + razorpay_payment_id;
-      console.log(body);
       const expectedSignature = crypto
         .createHmac("sha256", process.env.RAZOR_SECRET)
         .update(body.toString())

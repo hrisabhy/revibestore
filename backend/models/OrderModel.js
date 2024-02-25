@@ -19,6 +19,14 @@ const orderSchema = Schema(
       required: true,
       type: String,
     },
+    status: {
+      default: false,
+      type: Boolean,
+    },
+    received: {
+      default: false,
+      type: Boolean,
+    },
   },
   {
     timestampe: true,
