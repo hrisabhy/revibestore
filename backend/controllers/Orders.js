@@ -1,12 +1,13 @@
 const OrderModel = require("../models/OrderModel");
 class Orders {
   async getOrders(req, res) {
-    const { page } = req.params;
+    const query = req.query;
     const perPage = 5;
-    const skip = (page - 1) * perPage;
+    const skip = (query.page - 1) * perPage;
+    const option = query.userId ? { userId: query.userId } : {};
     try {
-      const count = await OrderModel.find({}).countDocuments();
-      const response = await OrderModel.find({})
+      const count = await OrderModel.find(option).countDocuments();
+      const response = await OrderModel.find(option)
         .populate(
           "productId",
           "-colors -sizes -createdAt -updatedAt -stock -image2 -image3"

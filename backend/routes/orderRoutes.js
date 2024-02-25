@@ -4,4 +4,5 @@ const router = Router();
 router.get("/orders/:page", Orders.getOrders);
 router.get("/order-details/:id", Orders.orderDetails);
 router.put("/order-deliver/:id", Orders.deliverOrder);
+router.get("/orders", Orders.getOrders);
 module.exports = router;
