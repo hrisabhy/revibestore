@@ -80,7 +80,7 @@ const Cart = () => {
               // Handle successful verification
               if (verificationResponse.statusText == "OK") {
                 dispatch(emptyCart());
-                navigate("/user");
+                navigate("/orders");
               }
             } catch (error) {
               // Handle verification error

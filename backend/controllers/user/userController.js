@@ -18,7 +18,6 @@ module.exports.register = async (req, res) => {
           name,
           email,
           password: hashed,
-          admin: true,
         });
         const token = createToken({ id: user._id, name: user.name });
         return res
@@ -50,7 +49,7 @@ module.exports.login = async (req, res) => {
           if (user.admin) {
             return res.status(201).json({ token, admin: true });
           } else {
-            return res.status(201).json({ token, admin: true });
+            return res.status(201).json({ token, admin: false });
           }
         } else {
           return res.status(400).json({

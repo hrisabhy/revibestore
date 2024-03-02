@@ -8,6 +8,7 @@ import { setUserToken } from "../../../store/reducers/authReducer";
 import { setSuccess } from "../../../store/reducers/globalReducer";
 import { showError } from "../../../utils/showError";
 import { useForm } from "../../../hooks/Form";
+import Footer from "../../../components/home/Footer";
 
 const Register = () => {
   const [errors, setErrors] = useState([]);
@@ -39,7 +40,7 @@ const Register = () => {
   return (
     <>
       <Nav />
-      <div className="mt-[70px] pb-[80px]">
+      <div className="mt-[70px]">
         <motion.div
           initial={{ opacity: 0, x: "-100vw" }}
           animate={{ opacity: 1, x: 0 }}
@@ -172,6 +173,7 @@ const Register = () => {
             </div>
           </div>
         </motion.div>
+        <Footer />
       </div>
     </>
   );

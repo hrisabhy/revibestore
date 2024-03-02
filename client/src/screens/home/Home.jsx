@@ -3,6 +3,9 @@ import Nav from "../../components/home/Nav";
 import Slider from "../../components/home/Slider";
 import HomeProduct from "../../components/home/HomeProduct";
 import { useRandomCategoriesQuery } from "../../store/services/categoryService";
+import AboutSection from "../../components/home/AboutSection";
+import Contact from "../../components/home/Contact";
+import Footer from "../../components/home/Footer";
 const Home = () => {
   const { data, isFetching } = useRandomCategoriesQuery();
   return (
@@ -19,6 +22,9 @@ const Home = () => {
             <HomeProduct category={category} key={category._id} />
           ))}
       </div>
+      <AboutSection />
+      <Contact />
+      <Footer />
     </>
   );
 };

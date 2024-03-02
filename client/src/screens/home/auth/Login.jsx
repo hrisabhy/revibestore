@@ -7,6 +7,7 @@ import { setUserToken } from "../../../store/reducers/authReducer";
 import { useUserLoginMutation } from "../../../store/services/authService";
 import { showError } from "../../../utils/showError";
 import { useForm } from "../../../hooks/Form";
+import Footer from "../../../components/home/Footer";
 
 const Login = () => {
   const [errors, setErrors] = useState([]);
@@ -36,7 +37,7 @@ const Login = () => {
   return (
     <>
       <Nav />
-      <div className="mt-[70px] pb-[80px]">
+      <div className="mt-[70px]">
         <motion.div
           initial={{ opacity: 0, x: "-100vw" }}
           animate={{ opacity: 1, x: 0 }}
@@ -143,6 +144,7 @@ const Login = () => {
             </div>
           </div>
         </motion.div>
+        <Footer />
       </div>
     </>
   );

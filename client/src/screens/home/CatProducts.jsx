@@ -5,6 +5,7 @@ import ProductSkeleton from "../../components/home/ProductSkeleton";
 import { useCatProductsQuery } from "../../store/services/homeProducts";
 import ProductCard from "../../components/home/ProductCard";
 import Pagination from "../../components/Pagination";
+import Footer from "../../components/home/Footer";
 
 const CatProducts = () => {
   const { name, page = 1 } = useParams();
@@ -45,6 +46,7 @@ const CatProducts = () => {
           <p className="alert-danger">No products found in #{name} category</p>
         )}
       </div>
+      <Footer />
     </>
   );
 };
