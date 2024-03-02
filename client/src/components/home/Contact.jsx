@@ -13,7 +13,7 @@ const Contact = () => {
             We're here to assist you! If you have any questions or need
             assistance, please feel free to reach out to us.
             <br />
-            You can also email us. Click here to reveal email address
+            You can also email us.
           </p>
           <span className="inline-flex mt-6 justify-center sm:justify-start"></span>
         </div>
