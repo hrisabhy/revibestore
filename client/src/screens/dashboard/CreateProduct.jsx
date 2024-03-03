@@ -250,7 +250,7 @@ const CreateProduct = () => {
                 onChange={imageHandle}
               />
             </div>
-
+            {/* 
             <div className="w-full p-3">
               <label htmlFor="image2" className="label">
                 Image 2
@@ -275,7 +275,7 @@ const CreateProduct = () => {
                 className="input-file"
                 onChange={imageHandle}
               />
-            </div>
+            </div> */}
           </div>
         </form>
         <div className="w-full xl:w-4/12 p-3">

@@ -38,12 +38,6 @@ class Product {
       if (!files["image1"]) {
         errors.push({ msg: "Image1 is required" });
       }
-      if (!files["image2"]) {
-        errors.push({ msg: "Image2 is required" });
-      }
-      if (!files["image3"]) {
-        errors.push({ msg: "Image3 is required" });
-      }
 
       if (errors.length !== 0) {
         return res.status(400).json({ errors });

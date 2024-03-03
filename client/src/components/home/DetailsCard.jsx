@@ -63,8 +63,6 @@ const DetailsCard = ({ product }) => {
       <div className="w-full order-2 md:order-1 md:w-6/12 p-5">
         <div className="flex flex-wrap -mx-1">
           <DetailsImage image={product.image1} />
-          <DetailsImage image={product.image2} />
-          <DetailsImage image={product.image3} />
         </div>
       </div>
       <div className="w-full order-1 md:order-2 md:w-6/12 p-5">
